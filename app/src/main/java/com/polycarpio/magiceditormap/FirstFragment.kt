@@ -24,19 +24,20 @@ class FirstFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
 
         val cartes = listOf(("Niort"), ("La Rochelle"))
 
-        binding.listview.adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, cartes)
+        binding.listview.adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, cartes)
 
         // récupérer sur le fragment 2 requireActivity()
-       binding.listview.onItemClickListener{parent, view, position, id ->
-           val selectedItemText = parent.getItemAtPosition(position)
-           Toast.makeText(this@FirstFragment, "Selected : $selectedItemText", Toast.LENGTH_LONG).show()
-       }
+        //  binding.listview.onItemClickListener{parent, view, position, id ->
+        // val selectedItemText = parent.getItemAtPosition(position)
+        //  Toast.makeText(this@FirstFragment, "Selected : $selectedItemText", Toast.LENGTH_LONG).show()
+        //}
 
 
         return binding.root
@@ -45,14 +46,10 @@ class FirstFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // binding.buttonFirst.setOnClickListener {
-        //   findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-       }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
+
+ // override fun onDestroyView() {
+     //   super.onDestroyView()
+     //   _binding = null
+    //}
