@@ -7,7 +7,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.polycarpio.magiceditormap.databinding.FragmentFirstBinding
 import com.polycarpio.magiceditormap.service.ApiClient
 import kotlinx.coroutines.GlobalScope
@@ -28,9 +31,12 @@ class FirstFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
+
+        val navController = findNavController()
+
 
         GlobalScope.launch {
             val cartes = ApiClient.apiService.getGameList().body()
@@ -38,24 +44,27 @@ class FirstFragment : Fragment() {
             Handler(Looper.getMainLooper()).post {
                 binding.listview.adapter =
                     ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, cartes!!)
+
+
             }
         }
-        // récupérer sur le fragment 2 requireActivity()
-        //  binding.listview.onItemClickListener{parent, view, position, id ->
-        // val selectedItemText = parent.getItemAtPosition(position)
-        //  Toast.makeText(this@FirstFragment, "Selected : $selectedItemText", Toast.LENGTH_LONG).show()
-        //}
 
+        binding.listview.setOnItemClickListener { parent, view, position, id ->
+            var item = binding.listview.adapter.getItem(position)
+            (activity as MainActivity)?.currentMap = item;
+            navController.navigate(R.id.mapFragment)
+        }
 
         return binding.root
-
     }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
     }
 }
 
- // override fun onDestroyView() {
-     //   super.onDestroyView()
-     //   _binding = null
-    //}
+// override fun onDestroyView() {
+//   super.onDestroyView()
+//   _binding = null
+//}

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
 import androidx.fragment.app.Fragment
@@ -24,6 +25,9 @@ class MapFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = MapFragmentBinding.inflate(inflater, container, false)
+
+        var name = (activity as MainActivity)?.currentMap
+
 
         binding.mapView?.getMapboxMap()?.loadStyleUri(Style.MAPBOX_STREETS)
 

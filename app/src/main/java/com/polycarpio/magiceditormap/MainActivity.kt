@@ -12,6 +12,7 @@ import com.polycarpio.magiceditormap.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var currentMap: Any
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
