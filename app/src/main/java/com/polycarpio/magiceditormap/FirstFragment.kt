@@ -8,17 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Toast
-import androidx.navigation.fragment.findNavController
 import com.polycarpio.magiceditormap.databinding.FragmentFirstBinding
-import com.polycarpio.magiceditormap.models.GameList
 import com.polycarpio.magiceditormap.service.ApiClient
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import retrofit2.Response
-
-
-
 
 
 /**
