@@ -9,5 +9,5 @@
     <string name="previous">Précédent</string>
     <string name="mapbox_access_token">pk.eyJ1IjoicG9seWNhcnBpbyIsImEiOiJja3o1bWg4czgwM2F1MnZtdTNwOXdneWg5In0.a5OnauJRmNZESuS2FuVv0A</string>
     <string name="map">Carte</string>
-    <string name="fab_description">Ajouter un point</string>
+    <string name="fab_carte">Créer une carte</string>
 </resources>
