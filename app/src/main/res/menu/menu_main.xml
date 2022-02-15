@@ -4,12 +4,6 @@
     tools:context="com.polycarpio.magiceditormap.MainActivity">
 
     <item
-        android:id="@+id/action_map"
-        android:icon="@drawable/ic_baseline_map_24"
-        android:title="@string/map"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"

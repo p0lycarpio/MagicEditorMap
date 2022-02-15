@@ -49,11 +49,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> {
                 true
             }
-            R.id.action_map -> {
-                val navController = findNavController(R.id.nav_host_fragment_content_main)
-                navController.navigate(R.id.mapFragment)
-                true
-            }
+
             else -> super.onOptionsItemSelected(item)
         }
 
