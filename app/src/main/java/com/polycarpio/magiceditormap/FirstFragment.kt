@@ -52,6 +52,10 @@ class FirstFragment : Fragment() {
             navController.navigate(R.id.mapFragment)
         }
 
+        binding.fab.setOnClickListener { view ->
+            navController.navigate(R.id.action_FirstFragment_to_SecondFragment)
+        }
+
         return binding.root
     }
 
