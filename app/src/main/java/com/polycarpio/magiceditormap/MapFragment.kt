@@ -6,34 +6,71 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mapbox.maps.Style
-import androidx.fragment.app.Fragment
-import com.polycarpio.magiceditormap.databinding.MapFragmentBinding
-import com.polycarpio.magiceditormap.service.ApiClient
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.fragment.app.Fragment
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
+import com.mapbox.maps.Style
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
+import com.polycarpio.magiceditormap.databinding.MapFragmentBinding
 import com.polycarpio.magiceditormap.models.MarkerPoint
+import com.polycarpio.magiceditormap.service.ApiClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MapFragment : Fragment() {
 
     private var _binding: MapFragmentBinding? = null
     private var points: MutableList<MarkerPoint> = arrayListOf()
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+
+    private fun addAnnotationToMap(long: Double, lat: Double) {
+        // Create an instance of the Annotation API and get the PointAnnotationManager.
+        bitmapFromDrawableRes(
+            (activity as MainActivity),
+            R.drawable.red_marker
+        )?.let {
+            val annotationApi = binding.mapView.annotations
+            val pointAnnotationManager = annotationApi.createPointAnnotationManager()
+            val pointAnnotationOptions: PointAnnotationOptions =
+                PointAnnotationOptions()
+                    .withPoint(Point.fromLngLat(long, lat))
+                    .withIconImage(it)
+            pointAnnotationManager.create(pointAnnotationOptions)
+        }
+    }
+
+    // Conversion du marker.png
+    private fun bitmapFromDrawableRes(context: Context, @DrawableRes resourceId: Int) =
+        convertDrawableToBitmap(AppCompatResources.getDrawable(context, resourceId))
+
+    private fun convertDrawableToBitmap(sourceDrawable: Drawable?): Bitmap? {
+        if (sourceDrawable == null) {
+            return null
+        }
+        return if (sourceDrawable is BitmapDrawable) {
+            sourceDrawable.bitmap
+        } else {
+            val constantState = sourceDrawable.constantState ?: return null
+            val drawable = constantState.newDrawable().mutate()
+            val bitmap: Bitmap = Bitmap.createBitmap(
+                drawable.intrinsicWidth, drawable.intrinsicHeight,
+                Bitmap.Config.ARGB_8888
+            )
+            val canvas = Canvas(bitmap)
+            drawable.setBounds(0, 0, canvas.width, canvas.height)
+            drawable.draw(canvas)
+            bitmap
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,100 +79,32 @@ class MapFragment : Fragment() {
     ): View {
         _binding = MapFragmentBinding.inflate(inflater, container, false)
 
-        val name = (activity as MainActivity)?.currentMap
-        Log.i("MSG", "Carte: " + name)
+        val mapView = binding.mapView.getMapboxMap()
+        // Récupère le nom de la carte sélectionnée
+        val name = (activity as MainActivity).currentMap
 
 
-        GlobalScope.launch {
+        // Appel à l'API pour les points
+        GlobalScope.launch(Dispatchers.Main) {
             points = ApiClient.apiService.getGameById(name).body()!!
-        }
-        var sumLat = 0.0
-        var sumLong = 0.0
-
-        for ( point in points) {
-            sumLat += point.latitude
-            sumLong += point.longitude
-        }
-
-        val moyLat = sumLat / points.size
-        val moyLong = sumLong / points.size
 
 
-        //TODO définir la position de la caméra sur les marqueurs
+            // Définit la position de la caméra sur le premier point
+            val cameraPosition = CameraOptions.Builder()
+                .zoom(13.0)
+                .center(Point.fromLngLat(points[0].longitude, points[0].latitude))
+                .build()
 
-/*
-        val cameraPosition = CameraOptions.Builder()
-            .zoom(8.0)
-            .center(Point.fromLngLat(moyLong, moyLat))
-            .build()
-*/
+            mapView.loadStyleUri(
+                Style.MAPBOX_STREETS
+            ) {
+                mapView.setCamera(cameraPosition)
 
-        val map = binding.mapView?.getMapboxMap()
-
-        map.loadStyleUri(Style.MAPBOX_STREETS,
-            object : Style.OnStyleLoaded {
-                override fun onStyleLoaded(style: Style) {
-
-                    for ( element in points) {
-                        addAnnotationToMap(element.longitude , element.latitude)
-                    }
-                }
-
-                private fun addAnnotationToMap(long:Double, lat:Double) {
-                    // Create an instance of the Annotation API and get the PointAnnotationManager.
-                    bitmapFromDrawableRes(
-                        (activity as MainActivity),
-                        R.drawable.red_marker
-                    )?.let {
-                        val annotationApi = binding.mapView?.annotations
-                        val pointAnnotationManager =
-                            annotationApi.createPointAnnotationManager()
-// Set options for the resulting symbol layer.
-                        val pointAnnotationOptions: PointAnnotationOptions =
-                            PointAnnotationOptions()
-// Define a geographic coordinate.
-                                .withPoint(Point.fromLngLat(long,lat ))
-// Specify the bitmap you assigned to the point annotation
-// The bitmap will be added to map style automatically.
-                                .withIconImage(it)
-// Add the resulting pointAnnotation to the map.
-                        pointAnnotationManager?.create(pointAnnotationOptions)
-                    }
-                }
-
-
-                private fun bitmapFromDrawableRes(context: Context, @DrawableRes resourceId: Int) =
-                    convertDrawableToBitmap(AppCompatResources.getDrawable(context, resourceId))
-
-                private fun convertDrawableToBitmap(sourceDrawable: Drawable?): Bitmap? {
-                    if (sourceDrawable == null) {
-                        return null
-                    }
-                    return if (sourceDrawable is BitmapDrawable) {
-                        sourceDrawable.bitmap
-                    } else {
-// copying drawable object to not manipulate on the same reference
-                        val constantState = sourceDrawable.constantState ?: return null
-                        val drawable = constantState.newDrawable().mutate()
-                        val bitmap: Bitmap = Bitmap.createBitmap(
-                            drawable.intrinsicWidth, drawable.intrinsicHeight,
-                            Bitmap.Config.ARGB_8888
-                        )
-                        val canvas = Canvas(bitmap)
-                        drawable.setBounds(0, 0, canvas.width, canvas.height)
-                        drawable.draw(canvas)
-                        bitmap
-                    }
+                for (element in points) {
+                    addAnnotationToMap(element.longitude, element.latitude)
                 }
             }
-        )
-
+        }
         return binding.root
     }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
-
 }
