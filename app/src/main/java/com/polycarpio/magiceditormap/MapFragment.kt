@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
@@ -18,6 +19,9 @@ import com.mapbox.maps.Style
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
+import com.mapbox.maps.plugin.gestures.OnMapClickListener
+import com.mapbox.maps.plugin.gestures.addOnMapClickListener
+import com.polycarpio.magiceditormap.components.AddPointModalBottomSheet
 import com.polycarpio.magiceditormap.databinding.MapFragmentBinding
 import com.polycarpio.magiceditormap.models.MarkerPoint
 import com.polycarpio.magiceditormap.service.ApiClient
@@ -25,7 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class MapFragment : Fragment() {
+class MapFragment : Fragment(), OnMapClickListener {
 
     private var _binding: MapFragmentBinding? = null
     private var points: MutableList<MarkerPoint> = arrayListOf()
@@ -95,16 +99,26 @@ class MapFragment : Fragment() {
                 .center(Point.fromLngLat(points[0].longitude, points[0].latitude))
                 .build()
 
-            mapView.loadStyleUri(
-                Style.MAPBOX_STREETS
-            ) {
-                mapView.setCamera(cameraPosition)
+            mapView.apply {
+                loadStyleUri(Style.MAPBOX_STREETS) {
+                    mapView.setCamera(cameraPosition)
+                    addOnMapClickListener(this@MapFragment)
 
-                for (element in points) {
-                    addAnnotationToMap(element.longitude, element.latitude)
+                    for (element in points) {
+                        addAnnotationToMap(element.longitude, element.latitude)
+                    }
                 }
             }
         }
         return binding.root
+    }
+
+    override fun onMapClick(point: Point): Boolean {
+        Toast.makeText(activity, "Click " + point.latitude(), Toast.LENGTH_SHORT).show()
+        addAnnotationToMap(point.longitude(), point.latitude())
+        val modalBottomSheet = AddPointModalBottomSheet()
+        // TODO: réussir à passer les coordoneées du nouveau point au fragment enfant (TextView)
+        modalBottomSheet.show((activity as MainActivity).supportFragmentManager, AddPointModalBottomSheet.TAG)
+        return true
     }
 }
