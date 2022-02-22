@@ -1,13 +1,18 @@
 <resources>
     <string name="app_name">MagicEditorMap</string>
     <string name="action_settings">Paramètres</string>
+    <!-- Misc -->
+    <string name="mapbox_access_token">pk.eyJ1IjoicG9seWNhcnBpbyIsImEiOiJja3o1bWg4czgwM2F1MnZtdTNwOXdneWg5In0.a5OnauJRmNZESuS2FuVv0A</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Liste des cartes</string>
     <string name="second_fragment_label">Création de points</string>
     <string name="map_fragment_label">Carte</string>
     <string name="next">Suivant</string>
     <string name="previous">Précédent</string>
-    <string name="mapbox_access_token">pk.eyJ1IjoicG9seWNhcnBpbyIsImEiOiJja3o1bWg4czgwM2F1MnZtdTNwOXdneWg5In0.a5OnauJRmNZESuS2FuVv0A</string>
     <string name="map">Carte</string>
     <string name="fab_carte">Créer une carte</string>
+    <string name="addPoint">Ajouter un point</string>
+    <string name="pointName">Nom du point</string>
+    <string name="add">Ajouter</string>
+    <string name="type_de_point">Type de point</string>
 </resources>
