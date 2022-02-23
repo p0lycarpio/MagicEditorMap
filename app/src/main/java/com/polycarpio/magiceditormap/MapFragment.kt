@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
@@ -114,11 +113,13 @@ class MapFragment : Fragment(), OnMapClickListener {
     }
 
     override fun onMapClick(point: Point): Boolean {
-        Toast.makeText(activity, "Click " + point.latitude(), Toast.LENGTH_SHORT).show()
+        val modalBottomSheet = AddPointModalBottomSheet(point.latitude(), point.longitude())
+
         addAnnotationToMap(point.longitude(), point.latitude())
-        val modalBottomSheet = AddPointModalBottomSheet()
-        // TODO: réussir à passer les coordoneées du nouveau point au fragment enfant (TextView)
-        modalBottomSheet.show((activity as MainActivity).supportFragmentManager, AddPointModalBottomSheet.TAG)
+        modalBottomSheet.show(
+            (activity as MainActivity).supportFragmentManager,
+            AddPointModalBottomSheet.TAG
+        )
         return true
     }
 }
