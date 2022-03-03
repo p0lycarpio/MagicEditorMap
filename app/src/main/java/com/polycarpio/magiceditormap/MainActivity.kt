@@ -1,18 +1,21 @@
 package com.polycarpio.magiceditormap
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import com.polycarpio.magiceditormap.databinding.ActivityMainBinding
+import com.polycarpio.magiceditormap.models.MarkerPoint
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var currentMap: String
+    var newMap: String? = null
+    var points: MutableList<MarkerPoint> = arrayListOf()
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
@@ -40,12 +43,11 @@ class MainActivity : AppCompatActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-            R.id.action_settings -> {
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
+        R.id.action_settings -> {
+            true
         }
+        else -> super.onOptionsItemSelected(item)
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)

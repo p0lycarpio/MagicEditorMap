@@ -1,6 +1,7 @@
 package com.polycarpio.magiceditormap.service
 
 import com.polycarpio.magiceditormap.models.MarkerPoint
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -13,7 +14,7 @@ interface ApiService {
    suspend fun getGameById(@Path("id") id : String): Response<MutableList<MarkerPoint>>
 
     @POST("game/{id}")
-    suspend fun postGameById(@Field("id") id: String): Response<String>
+    suspend fun postGameById(@Path("id")id: String, @Body body:MutableList<MarkerPoint>): Response<String>
 
     @DELETE("game/{id}")
     suspend fun deleteGameById(@Field("id") id: String): Response<String>

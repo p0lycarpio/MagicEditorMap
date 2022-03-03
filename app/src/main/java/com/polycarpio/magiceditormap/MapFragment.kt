@@ -6,9 +6,11 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
@@ -22,16 +24,15 @@ import com.mapbox.maps.plugin.gestures.OnMapClickListener
 import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 import com.polycarpio.magiceditormap.components.AddPointModalBottomSheet
 import com.polycarpio.magiceditormap.databinding.MapFragmentBinding
-import com.polycarpio.magiceditormap.models.MarkerPoint
 import com.polycarpio.magiceditormap.service.ApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 class MapFragment : Fragment(), OnMapClickListener {
 
     private var _binding: MapFragmentBinding? = null
-    private var points: MutableList<MarkerPoint> = arrayListOf()
 
     private val binding get() = _binding!!
 
@@ -85,27 +86,52 @@ class MapFragment : Fragment(), OnMapClickListener {
         val mapView = binding.mapView.getMapboxMap()
         // Récupère le nom de la carte sélectionnée
         val name = (activity as MainActivity).currentMap
-
+        val newMap = (activity as MainActivity).newMap
 
         // Appel à l'API pour les points
-        GlobalScope.launch(Dispatchers.Main) {
-            points = ApiClient.apiService.getGameById(name).body()!!
+        if (name != newMap) {
+            GlobalScope.launch(Dispatchers.Main) {
+                try {
+                    val response = ApiClient.apiService.getGameById(name)
 
+                    if (response.isSuccessful && response.body() != null) {
+                        val points = response.body()!!
+                        (activity as MainActivity).points = points
 
-            // Définit la position de la caméra sur le premier point
-            val cameraPosition = CameraOptions.Builder()
-                .zoom(13.0)
-                .center(Point.fromLngLat(points[0].longitude, points[0].latitude))
-                .build()
+                        // Définit la position de la caméra sur le premier point
+                        val cameraPosition = CameraOptions.Builder()
+                            .zoom(13.0)
+                            .center(Point.fromLngLat(points[0].longitude, points[0].latitude))
+                            .build()
 
+                        mapView.apply {
+                            loadStyleUri(Style.MAPBOX_STREETS) {
+                                mapView.setCamera(cameraPosition)
+                                addOnMapClickListener(this@MapFragment)
+
+                                for (element in points) {
+                                    addAnnotationToMap(element.longitude, element.latitude)
+                                }
+                            }
+                        }
+                    }
+                } catch (e: IllegalStateException) {
+                    Log.i("MSG", "Carte vide. Pas de points")
+                    mapView.apply {
+                        loadStyleUri(Style.MAPBOX_STREETS) {
+                            addOnMapClickListener(this@MapFragment)
+                        }
+                    }
+
+                } catch (e: Exception) {
+                    Log.i("ERR", e.message.toString())
+                    Toast.makeText(activity, "Une erreur est survenue", Toast.LENGTH_LONG).show()
+                }
+            }
+        } else {
             mapView.apply {
                 loadStyleUri(Style.MAPBOX_STREETS) {
-                    mapView.setCamera(cameraPosition)
                     addOnMapClickListener(this@MapFragment)
-
-                    for (element in points) {
-                        addAnnotationToMap(element.longitude, element.latitude)
-                    }
                 }
             }
         }
