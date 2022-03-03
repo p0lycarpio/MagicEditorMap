@@ -15,4 +15,6 @@
     <string name="pointName">Nom du point</string>
     <string name="add">Ajouter</string>
     <string name="type_de_point">Type de point</string>
+    <string name="latitude">Latitude :</string>
+    <string name="longitude">Longitude :</string>
 </resources>
