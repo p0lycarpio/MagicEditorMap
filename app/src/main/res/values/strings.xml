@@ -17,4 +17,6 @@
     <string name="type_de_point">Type de point</string>
     <string name="latitude">Latitude :</string>
     <string name="longitude">Longitude :</string>
+    <string name="delete">Supprimer</string>
+    <string name="message_delete_map">Êtes-vous sûr de vouloir supprimer la carte </string>
 </resources>

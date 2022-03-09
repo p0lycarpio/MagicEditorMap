@@ -4,6 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.21302083333333333" />
+        <entry key="../../Android/Sdk/platforms/android-31/data/res/layout/simple_expandable_list_item_1.xml" value="0.21875" />
+        <entry key="../../Android/Sdk/platforms/android-31/data/res/layout/simple_list_item_1.xml" value="0.21875" />
+        <entry key="../../Android/Sdk/platforms/android-31/data/res/layout/simple_list_item_2.xml" value="0.21875" />
+        <entry key="../../Android/Sdk/platforms/android-31/data/res/layout/simple_list_item_single_choice.xml" value="0.22" />
         <entry key="../../Android/Sdk/platforms/android-32/data/res/layout/simple_list_item_1.xml" value="0.16197916666666667" />
         <entry key="../../Android/Sdk/platforms/android-32/data/res/layout/simple_list_item_2.xml" value="0.16197916666666667" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2140625" />
@@ -16,6 +20,8 @@
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.29583333333333334" />
         <entry key="app/src/main/res/layout/fragment_maps.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.19791666666666666" />
+        <entry key="app/src/main/res/layout/linear_layout.xml" value="0.1890625" />
+        <entry key="app/src/main/res/layout/list_item.xml" value="0.5" />
         <entry key="app/src/main/res/layout/map_fragment.xml" value="0.19791666666666666" />
         <entry key="app/src/main/res/layout/modal_bottom_sheet_addPoint.xml" value="0.1" />
         <entry key="app/src/main/res/layout/modal_bottom_sheet_addpoint.xml" value="0.335" />

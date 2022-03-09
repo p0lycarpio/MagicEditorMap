@@ -17,6 +17,6 @@ interface ApiService {
     suspend fun postGameById(@Path("id")id: String, @Body body:MutableList<MarkerPoint>): Response<String>
 
     @DELETE("game/{id}")
-    suspend fun deleteGameById(@Field("id") id: String): Response<String>
+    suspend fun deleteGameById(@Path("id") id: String): Response<String>
 
 }
