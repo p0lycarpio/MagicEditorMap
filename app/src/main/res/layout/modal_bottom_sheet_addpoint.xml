@@ -49,7 +49,8 @@
                 android:hint="@string/type_de_point"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="none" />
+                android:inputType="none"
+                android:text=""/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

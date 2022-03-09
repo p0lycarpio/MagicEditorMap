@@ -3,12 +3,13 @@ package com.polycarpio.magiceditormap
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.polycarpio.magiceditormap.components.RemoveMapDialog
 import com.polycarpio.magiceditormap.databinding.FragmentFirstBinding
 import com.polycarpio.magiceditormap.service.ApiClient
 import kotlinx.coroutines.GlobalScope
@@ -42,17 +43,22 @@ class FirstFragment : Fragment() {
             Handler(Looper.getMainLooper()).post {
                 binding.listview.adapter =
                     ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, cartes!!)
-
             }
         }
-
-        binding.listview.setOnItemClickListener { parent, view, position, id ->
+        binding.listview.setOnItemClickListener { _, _, position, _ ->
             val item = binding.listview.adapter.getItem(position)
             (activity as MainActivity)?.currentMap = item as String
             navController.navigate(R.id.mapFragment)
         }
 
-        binding.fab.setOnClickListener { view ->
+        binding.listview.setOnItemLongClickListener { _, _, position, _ ->
+            val item = binding.listview.adapter.getItem(position)
+            (activity as MainActivity)?.currentMap = item as String
+            RemoveMapDialog().show(childFragmentManager, RemoveMapDialog.TAG)
+            return@setOnItemLongClickListener true
+        }
+
+        binding.fab.setOnClickListener {
             navController.navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
 

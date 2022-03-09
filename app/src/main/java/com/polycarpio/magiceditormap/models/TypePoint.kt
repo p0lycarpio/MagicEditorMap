@@ -4,5 +4,6 @@ enum class TypePoint {
     TARGET,
     CHECKPOINT,
     ATTACK,
-    BONUS
+    BONUS,
+    NULL
 }
