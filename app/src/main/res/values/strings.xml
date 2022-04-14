@@ -19,4 +19,6 @@
     <string name="longitude">Longitude :</string>
     <string name="delete">Supprimer</string>
     <string name="message_delete_map">Êtes-vous sûr de vouloir supprimer la carte </string>
+    <string name="addMap">Ajouter une carte</string>
+    <string name="mapName">Nom de la carte</string>
 </resources>

@@ -7,26 +7,13 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.polycarpio.magiceditormap.FirstFragment"
+        android:name="com.polycarpio.magiceditormap.MapListFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
-        <action
             android:id="@+id/action_FirstFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.polycarpio.magiceditormap.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"

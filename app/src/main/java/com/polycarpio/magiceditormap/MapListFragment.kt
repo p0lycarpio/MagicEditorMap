@@ -9,9 +9,12 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.polycarpio.magiceditormap.components.AddMapModalBottomSheet
+import com.polycarpio.magiceditormap.components.AddPointModalBottomSheet
 import com.polycarpio.magiceditormap.components.RemoveMapDialog
 import com.polycarpio.magiceditormap.databinding.FragmentFirstBinding
 import com.polycarpio.magiceditormap.service.ApiClient
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -19,7 +22,7 @@ import kotlinx.coroutines.launch
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment() {
+class MapListFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
 
@@ -35,16 +38,47 @@ class FirstFragment : Fragment() {
         _binding = FragmentFirstBinding.inflate(inflater, container, false)
 
         val navController = findNavController()
+        var list = (activity as MainActivity).mapList
 
 
-        GlobalScope.launch {
-            val cartes = ApiClient.apiService.getGameList().body()
+        GlobalScope.launch(Dispatchers.Main) {
+            try {
+                if (!list.isEmpty()) {
+                    Handler(Looper.getMainLooper()).post {
+                        binding.listview.adapter =
+                            ArrayAdapter(
+                                requireContext(),
+                                android.R.layout.simple_list_item_1,
+                                list
+                            )
+                    }
+                } else {
 
-            Handler(Looper.getMainLooper()).post {
-                binding.listview.adapter =
-                    ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, cartes!!)
+                    val cartes = ApiClient.apiService.getGameList()
+                    if (cartes.isSuccessful && cartes.body() != null) {
+                        list = cartes.body()!!
+                        Handler(Looper.getMainLooper()).post {
+                            binding.listview.adapter =
+                                ArrayAdapter(
+                                    requireContext(),
+                                    android.R.layout.simple_list_item_1,
+                                    list
+                                )
+                        }
+                    } else {
+                        binding.errortitle.text = "Erreur de l'API"
+                        binding.errormsg.text =
+                            "Il n'y a pas de données ou l'API n'est pas en ligne"
+                    }
+                }
+            } catch (e: Exception) {
+                binding.errortitle.text = "Erreur de connexion"
+                binding.errormsg.text = "Vérifiez votre connexion internet"
+
             }
+
         }
+
         binding.listview.setOnItemClickListener { _, _, position, _ ->
             val item = binding.listview.adapter.getItem(position)
             (activity as MainActivity)?.currentMap = item as String
@@ -59,7 +93,11 @@ class FirstFragment : Fragment() {
         }
 
         binding.fab.setOnClickListener {
-            navController.navigate(R.id.action_FirstFragment_to_SecondFragment)
+            val modalBottomSheet = AddMapModalBottomSheet()
+            modalBottomSheet.show(
+                (activity as MainActivity).supportFragmentManager,
+                AddPointModalBottomSheet.TAG
+            )
         }
 
         return binding.root

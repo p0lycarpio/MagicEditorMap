@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
@@ -86,10 +85,10 @@ class MapFragment : Fragment(), OnMapClickListener {
         val mapView = binding.mapView.getMapboxMap()
         // Récupère le nom de la carte sélectionnée
         val name = (activity as MainActivity).currentMap
-        val newMap = (activity as MainActivity).newMap
+        var newMap = (activity as MainActivity).newMap
 
         // Appel à l'API pour les points
-        if (name != newMap) {
+        if (!newMap) {
             GlobalScope.launch(Dispatchers.Main) {
                 try {
                     val response = ApiClient.apiService.getGameById(name)
@@ -115,17 +114,13 @@ class MapFragment : Fragment(), OnMapClickListener {
                             }
                         }
                     }
-                } catch (e: IllegalStateException) {
+                } catch (e: Exception) {
                     Log.i("MSG", "Carte vide. Pas de points")
                     mapView.apply {
                         loadStyleUri(Style.MAPBOX_STREETS) {
                             addOnMapClickListener(this@MapFragment)
                         }
                     }
-
-                } catch (e: Exception) {
-                    Log.i("ERR", e.message.toString())
-                    Toast.makeText(activity, "Une erreur est survenue", Toast.LENGTH_LONG).show()
                 }
             }
         } else {
@@ -134,6 +129,7 @@ class MapFragment : Fragment(), OnMapClickListener {
                     addOnMapClickListener(this@MapFragment)
                 }
             }
+            newMap = false
         }
         return binding.root
     }

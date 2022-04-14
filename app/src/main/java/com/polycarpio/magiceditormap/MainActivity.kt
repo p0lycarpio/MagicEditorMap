@@ -14,7 +14,8 @@ import com.polycarpio.magiceditormap.models.MarkerPoint
 class MainActivity : AppCompatActivity() {
 
     lateinit var currentMap: String
-    var newMap: String? = null
+    var newMap: Boolean = false
+    var mapList: MutableList<String> = arrayListOf()
     var points: MutableList<MarkerPoint> = arrayListOf()
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
