@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import com.mapbox.geojson.Point
@@ -34,6 +35,7 @@ class MapFragment : Fragment(), OnMapClickListener {
     private var _binding: MapFragmentBinding? = null
 
     private val binding get() = _binding!!
+
 
     private fun addAnnotationToMap(long: Double, lat: Double) {
         // Create an instance of the Annotation API and get the PointAnnotationManager.
@@ -79,6 +81,7 @@ class MapFragment : Fragment(), OnMapClickListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
+
     ): View {
         _binding = MapFragmentBinding.inflate(inflater, container, false)
 
@@ -86,6 +89,8 @@ class MapFragment : Fragment(), OnMapClickListener {
         // Récupère le nom de la carte sélectionnée
         val name = (activity as MainActivity).currentMap
         var newMap = (activity as MainActivity).newMap
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Carte " + name
 
         // Appel à l'API pour les points
         if (!newMap) {
@@ -129,7 +134,7 @@ class MapFragment : Fragment(), OnMapClickListener {
                     addOnMapClickListener(this@MapFragment)
                 }
             }
-            newMap = false
+            (activity as MainActivity).newMap = false
         }
         return binding.root
     }

@@ -3,28 +3,32 @@ package com.polycarpio.magiceditormap
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.polycarpio.magiceditormap.components.AddMapModalBottomSheet
 import com.polycarpio.magiceditormap.components.AddPointModalBottomSheet
 import com.polycarpio.magiceditormap.components.RemoveMapDialog
-import com.polycarpio.magiceditormap.databinding.FragmentFirstBinding
+import com.polycarpio.magiceditormap.databinding.FragmentMaplistBinding
 import com.polycarpio.magiceditormap.service.ApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import android.view.MenuInflater
+
+import android.view.Menu
+
+
+
 
 
 /**
- * A simple [Fragment] subclass as the default destination in the navigation.
+ * First fragment on app opening
  */
 class MapListFragment : Fragment() {
 
-    private var _binding: FragmentFirstBinding? = null
+    private var _binding: FragmentMaplistBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -35,34 +39,35 @@ class MapListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentFirstBinding.inflate(inflater, container, false)
+        _binding = FragmentMaplistBinding.inflate(inflater, container, false)
 
         val navController = findNavController()
-        var list = (activity as MainActivity).mapList
 
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                if (!list.isEmpty()) {
+                if (!(activity as MainActivity).mapList.isEmpty()) {
                     Handler(Looper.getMainLooper()).post {
                         binding.listview.adapter =
                             ArrayAdapter(
                                 requireContext(),
                                 android.R.layout.simple_list_item_1,
-                                list
+                                (activity as MainActivity).mapList
                             )
                     }
                 } else {
 
                     val cartes = ApiClient.apiService.getGameList()
                     if (cartes.isSuccessful && cartes.body() != null) {
-                        list = cartes.body()!!
+                        (activity as MainActivity).mapList.addAll(cartes.body()!!)
                         Handler(Looper.getMainLooper()).post {
                             binding.listview.adapter =
                                 ArrayAdapter(
                                     requireContext(),
                                     android.R.layout.simple_list_item_1,
-                                    list
+                                    (activity as MainActivity).mapList
                                 )
                         }
                     } else {
@@ -89,9 +94,10 @@ class MapListFragment : Fragment() {
             val item = binding.listview.adapter.getItem(position)
             (activity as MainActivity)?.currentMap = item as String
             RemoveMapDialog().show(childFragmentManager, RemoveMapDialog.TAG)
+            // TODO reload list
+            // RemoveMapDialog().onDismiss()
             return@setOnItemLongClickListener true
         }
-
         binding.fab.setOnClickListener {
             val modalBottomSheet = AddMapModalBottomSheet()
             modalBottomSheet.show(
@@ -99,7 +105,6 @@ class MapListFragment : Fragment() {
                 AddPointModalBottomSheet.TAG
             )
         }
-
         return binding.root
     }
 
@@ -107,9 +112,19 @@ class MapListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_list, menu);
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    companion object {
+        const val TAG = "MapListFragment"
+    }
 }
 
-// override fun onDestroyView() {
-//   super.onDestroyView()
-//   _binding = null
-//}

@@ -2,20 +2,28 @@ package com.polycarpio.magiceditormap.components
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.polycarpio.magiceditormap.MainActivity
 import com.polycarpio.magiceditormap.R
 import com.polycarpio.magiceditormap.service.ApiClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import android.app.Activity
+
+
+
 
 class RemoveMapDialog : DialogFragment() {
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-    AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.delete))
             .setMessage(getString(R.string.message_delete_map) + " " + (activity as MainActivity).currentMap + " ?")
             .setNegativeButton("Annuler") { _, _ ->
@@ -27,12 +35,13 @@ class RemoveMapDialog : DialogFragment() {
 
                 GlobalScope.launch(Dispatchers.Main) {
                     try {
-                        val response = ApiClient.apiService.deleteGameById((activity as MainActivity).currentMap)
+                        val del = (activity as MainActivity).currentMap.toString()
+                        val response = ApiClient.apiService.deleteGameById(del)
                         Log.i("MSG", response.toString())
                         if (response.isSuccessful) {
                             Toast.makeText(fActivity, "Carte supprimée", Toast.LENGTH_LONG).show()
+                            (activity as MainActivity).mapList.remove(del)
                             this@RemoveMapDialog.dismiss()
-                            // TODO reload list
                         }
                     } catch (e: Exception) {
                         Toast.makeText(fActivity, "Erreur de suppression", Toast.LENGTH_LONG).show()
@@ -46,3 +55,4 @@ class RemoveMapDialog : DialogFragment() {
         const val TAG = "RemoveMapDialog"
     }
 }
+

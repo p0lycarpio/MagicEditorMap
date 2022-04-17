@@ -46,7 +46,6 @@
 
             <AutoCompleteTextView
                 android:id="@+id/pointTypeField"
-                android:hint="@string/type_de_point"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
@@ -75,6 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/fieldLong"
             android:layout_alignEnd="@id/fieldLong"
+            style="?attr/materialButtonStyle"
             android:text="@string/add" />
 
     </RelativeLayout>

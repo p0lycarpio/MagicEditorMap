@@ -44,7 +44,8 @@ class MainActivity : AppCompatActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        R.id.action_settings -> {
+        R.id.action_reload -> {
+            recreate()
             true
         }
         else -> super.onOptionsItemSelected(item)
