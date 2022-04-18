@@ -1,6 +1,7 @@
 package com.polycarpio.magiceditormap
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
@@ -92,6 +93,13 @@ class MapFragment : Fragment(), OnMapClickListener {
 
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "Carte " + name
 
+        var mapStyle = Style.MAPBOX_STREETS
+        val nightModeFlags =
+            context!!.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        when (nightModeFlags) {
+            Configuration.UI_MODE_NIGHT_YES -> mapStyle = Style.DARK
+        }
+
         // Appel à l'API pour les points
         if (!newMap) {
             GlobalScope.launch(Dispatchers.Main) {
@@ -109,7 +117,7 @@ class MapFragment : Fragment(), OnMapClickListener {
                             .build()
 
                         mapView.apply {
-                            loadStyleUri(Style.MAPBOX_STREETS) {
+                            loadStyleUri(mapStyle) {
                                 mapView.setCamera(cameraPosition)
                                 addOnMapClickListener(this@MapFragment)
 
@@ -122,7 +130,7 @@ class MapFragment : Fragment(), OnMapClickListener {
                 } catch (e: Exception) {
                     Log.i("MSG", "Carte vide. Pas de points")
                     mapView.apply {
-                        loadStyleUri(Style.MAPBOX_STREETS) {
+                        loadStyleUri(mapStyle) {
                             addOnMapClickListener(this@MapFragment)
                         }
                     }
@@ -130,7 +138,7 @@ class MapFragment : Fragment(), OnMapClickListener {
             }
         } else {
             mapView.apply {
-                loadStyleUri(Style.MAPBOX_STREETS) {
+                loadStyleUri(mapStyle) {
                     addOnMapClickListener(this@MapFragment)
                 }
             }
