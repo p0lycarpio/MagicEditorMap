@@ -43,6 +43,7 @@ class AddMapModalBottomSheet() : BottomSheetDialogFragment() {
                     if (response.isSuccessful) {
                         Toast.makeText(activity, "Carte ajoutée", Toast.LENGTH_LONG).show()
                         (activity as MainActivity).mapList.add(mapName)
+                        (activity as MainActivity).mapList.sort()
                         (activity as MainActivity).currentMap = mapName
                         (activity as MainActivity).newMap = true
                         navController.navigate(R.id.mapFragment)
