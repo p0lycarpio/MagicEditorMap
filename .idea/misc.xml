@@ -4,6 +4,12 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.21302083333333333" />
+        <entry key="../../.gradle/caches/transforms-3/17d9c715b0b378da0327a501dc9be58c/transformed/jetified-maps-locationcomponent-10.2.0/res/drawable/mapbox_info_icon_default.xml" value="0.371875" />
+        <entry key="../../.gradle/caches/transforms-3/17d9c715b0b378da0327a501dc9be58c/transformed/jetified-maps-locationcomponent-10.2.0/res/drawable/mapbox_user_icon.xml" value="0.371875" />
+        <entry key="../../.gradle/caches/transforms-3/17d9c715b0b378da0327a501dc9be58c/transformed/jetified-maps-locationcomponent-10.2.0/res/drawable/mapbox_user_icon_shadow.xml" value="0.371875" />
+        <entry key="../../.gradle/caches/transforms-3/17d9c715b0b378da0327a501dc9be58c/transformed/jetified-maps-locationcomponent-10.2.0/res/drawable/mapbox_user_icon_stale.xml" value="0.371875" />
+        <entry key="../../.gradle/caches/transforms-3/17d9c715b0b378da0327a501dc9be58c/transformed/jetified-maps-locationcomponent-10.2.0/res/drawable/mapbox_user_puck_icon.xml" value="0.18385416666666668" />
+        <entry key="../../.gradle/caches/transforms-3/17d9c715b0b378da0327a501dc9be58c/transformed/jetified-maps-locationcomponent-10.2.0/res/drawable/mapbox_user_stroke_icon.xml" value="0.371875" />
         <entry key="../../Android/Sdk/platforms/android-31/data/res/layout/simple_expandable_list_item_1.xml" value="0.21875" />
         <entry key="../../Android/Sdk/platforms/android-31/data/res/layout/simple_list_item_1.xml" value="0.21875" />
         <entry key="../../Android/Sdk/platforms/android-31/data/res/layout/simple_list_item_2.xml" value="0.21875" />
